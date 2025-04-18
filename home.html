@@ -1,0 +1,172 @@
+<head>
+  <script type="module">
+    //import Game from "./snake.js";
+
+    let posX = 0; 
+    let posY = 0;
+    const size = 40;
+    const fieldSize = 16;
+
+    class Game{
+      
+    }
+
+    class Position{
+      constructor(x, y){
+        this.x = x;
+        this.y = y;
+      }
+
+      equals(posToCompare){
+        return (posToCompare.x == this.x) && (posToCompare.y == this.y);
+      }
+    }
+
+    class Line{
+      constructor(startX, startY, endX, endY){
+        this.start = new Position(startX, startY);
+        this.end = new Position(endX, endY);
+      }
+
+      get lengthX(){
+        return this.end.x - this.start.x;
+      }
+
+      get lengthY(){
+        return this.end.y - this.start.y;
+      }
+
+      expandedBorder(){  
+        let currPos = new Position(this.start.x, this.start.y);
+        let points = [];
+
+        const lengthX = this.lengthX;
+        const lengthY = this.lengthY;
+
+        for(let i = 1; i <= lengthX; i = i + 1){
+          points.push(new Position(currPos.x, currPos.y));
+          currPos.x = currPos.x + 1;
+          currPos.y = currPos.y + lengthY / lengthX;
+        }
+
+        return points;
+      }
+
+      isOnLine(position){
+        const expandedBorder = this.expandedBorder();
+
+        let result = false;
+
+        expandedBorder.forEach((pos) => {
+          if(pos.equals(position)){
+            result = true;
+          }
+        });
+        return result;
+      }
+    }
+
+    const pos1 = new Position(0,0);
+
+    // add border
+    const border = new Line(0,7,10,7);    
+
+    const field = document.getElementById("field");
+
+    const character = document.getElementById("character");
+    
+    border.expandedBorder().forEach((point) => {
+      let borderElement = document.createElement("div");
+      borderElement.style.backgroundColor = "black";
+      borderElement.style.width = size+"px";
+      borderElement.style.height = size+"px";      
+      field.appendChild(borderElement);
+      borderElement.style.position = "absolute";
+      borderElement.style.top = (point.y * size) + "px";
+      borderElement.style.left = (point.x * size) + "px";
+    });
+
+    window.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+
+      switch (event.key) {
+        case "ArrowDown":
+          posY = posY+1;
+          break;
+        case "ArrowUp":
+          posY = posY-1;
+          break;
+        case "ArrowLeft":
+          posX = posX-1;
+          break;
+        case "ArrowRight":
+          posX = posX+1;
+          break;
+        default:
+          return; // Quit when this doesn't handle the key event.
+      }
+
+      if(posX >= fieldSize){
+        posX = 0;
+      }
+      if(posX < 0){
+        posX = fieldSize-1;
+      }
+      if(posY >= fieldSize){
+        posY = 0;
+      }
+      if(posY < 0){
+        posY = fieldSize-1;
+      }
+
+      if(border.isOnLine(new Position(posX, posY))){
+        console.log("dead");
+        character.style.backgroundColor = "red";
+      }
+      
+      document.getElementById("character").style.left = posX * size;
+      document.getElementById("character").style.top = posY * size;
+    
+      // Cancel the default action to avoid it being handled twice
+      event.preventDefault();
+    }, true);
+
+    function moveCharacter(event){
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+
+      switch (event.key) {
+        case "ArrowDown":
+          posY = posY+1;
+          break;
+        case "ArrowUp":
+          posY = posY-1;
+          break;
+        case "ArrowLeft":
+          posX = posX-1;
+          break;
+        case "ArrowRight":
+          posX = posX+1;
+          break;
+        default:
+          return; // Quit when this doesn't handle the key event.
+      }
+
+      document.getElementById("character").style.left = posX * size;
+      document.getElementById("character").style.top = posY * size;
+    
+      // Cancel the default action to avoid it being handled twice
+      event.preventDefault();
+    }
+  </script>
+</head>
+<body>
+  <div id="field" style="width:640px;height:640px;background-color:rgb(100,200,100);position:relative;">
+    	<div id="character" style="width:40px;height:40px;background-color:rgb(0,150,50);position:absolute;border-radius:10px;z-index:10;">
+
+      </div>
+  </div>
+</body>
