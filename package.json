@@ -1,0 +1,23 @@
+{
+  "name": "game1",
+  "version": "1.0.0",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weobleyc/game1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/weobleyc/game1/issues"
+  },
+  "homepage": "https://github.com/weobleyc/game1#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
